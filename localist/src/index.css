@@ -1,0 +1,17 @@
+
+
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+
+}
+
+
+body {
+  margin: 0;
+  height: 100vh;
+  min-height: 100vh;
+  background: linear-gradient(#2A00B7, #42006C);
+  
+}
+
