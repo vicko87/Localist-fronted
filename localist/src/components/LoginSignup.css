@@ -5,7 +5,7 @@
     margin-top: 200px;
     width: 600px;
     background: #fff;
-    padding-bottom: 30px, ;
+    padding-bottom: 30px;
 }
 
 
@@ -75,7 +75,8 @@
 
 .submit-container{
     display: flex;
-    gap: 30px;
+     justify-content: center;
+   
     margin: 60px auto;
 }
 
