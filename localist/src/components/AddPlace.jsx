@@ -1,15 +1,32 @@
-import React, { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useLocation, useNavigate } from 'react-router-dom';
 import './AddPlace.css';
 
-const AddPlace = () => {
 
+  
+const AddPlace = () => {
+  const navigate = useNavigate(); 
+const location = useLocation()
+ // Obtener la categoría pre-seleccionada (si viene de Localist)
+  const selectedCategory = location.state?.selectedCategory || '';
+  // estado inicial del formulario usa la categoría recibida:
 const [formData, setFormData] = useState({
   name: '',
-  category: '',
+  category: selectedCategory,  // ← Si clickeaste 'Hotel', aquí será 'hotel'
   notes: '',
   image: null
 })
- 
+   // Si se actualiza la categoría desde fuera, actualizar el form
+  useEffect(() => {
+    if (selectedCategory) {
+      setFormData(prev => ({
+        ...prev,
+        category: selectedCategory
+      }));
+    }
+  }, [selectedCategory]);
+
+
 const handleInputChange = (e) =>{
   const {name, value} = e.target;
   setFormData(prev => ({ 
@@ -26,17 +43,27 @@ const handleImageUpload = (e) => {
   }))
 }
 
-const handleSubmit = (e) => {
-  e.preventDefault();
-  console.log('Form data:', formData)
-  //// Aquí implementarías la lógica para guardar el lugar
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    
+    if (!formData.name) {
+      alert('Please enter a name for the place');
+      return;
+    }
+    
+    console.log('Form data:', formData);
+    alert('Place saved successfully!');
+    navigate('/localist');
   };
 
   return (
      <div className="addplace-container">
       <div className="addplace-header">
-        <button className="back-button">←</button>
-    <h2>AddPlace</h2>
+        <button className="back-button"
+          onClick={() => navigate('/localist')} 
+        >←
+        </button>
+    <h2>Add Place</h2>
     </div>
     
       <form onSubmit={handleSubmit} className="addplace-form">
@@ -46,7 +73,7 @@ const handleSubmit = (e) => {
               <img src={URL.createObjectURL(formData.image)} alt="Preview" />
             ) : (
               <div className="placeholder-content">
-                <div className="image-icon">🏔️</div>
+                <div className="image-icon">📷</div>
                 <p>Tap to add photo</p>
               </div>
             )}
@@ -78,15 +105,15 @@ const handleSubmit = (e) => {
             <select
               id="category"
               name="category"
-              value={formData.category}
+              value={formData.category}// ← Si viene de Hotel, mostrará 'hotel'
               onChange={handleInputChange}
               className="form-select"
             >
               <option value="">Category</option>
               <option value="restaurant">Restaurant</option>
               <option value="cafe">Café</option>
-              <option value="park">Park</option>
-              <option value="museum">Museum</option>
+              <option value="hotel">Hotel</option>
+                <option value="store">Store</option>   
               <option value="shop">Shop</option>
               <option value="other">Other</option>
             </select>
@@ -110,6 +137,7 @@ const handleSubmit = (e) => {
         </button>
       </form>
     </div>
+
 
   )
 }
