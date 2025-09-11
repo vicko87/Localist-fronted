@@ -1,22 +1,29 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
+import MapSelector from './MapSelector';
 import './AddPlace.css';
 
-
-  
 const AddPlace = () => {
   const navigate = useNavigate(); 
-const location = useLocation()
- // Obtener la categoría pre-seleccionada (si viene de Localist)
+  const location = useLocation()
+  
+  // Obtener la categoría pre-seleccionada (si viene de Localist)
   const selectedCategory = location.state?.selectedCategory || '';
+  
   // estado inicial del formulario usa la categoría recibida:
-const [formData, setFormData] = useState({
-  name: '',
-  category: selectedCategory,  // ← Si clickeaste 'Hotel', aquí será 'hotel'
-  notes: '',
-  image: null
-})
-   // Si se actualiza la categoría desde fuera, actualizar el form
+  const [formData, setFormData] = useState({
+    name: '',
+    category: selectedCategory,
+    address: '',
+    notes: '',
+    image: null,
+    coordinates: null  // ← NUEVO: coordenadas del mapa
+  })
+  
+  // Estado para mostrar/ocultar mapa
+  const [showMap, setShowMap] = useState(false);
+
+  // Si se actualiza la categoría desde fuera, actualizar el form
   useEffect(() => {
     if (selectedCategory) {
       setFormData(prev => ({
@@ -26,22 +33,44 @@ const [formData, setFormData] = useState({
     }
   }, [selectedCategory]);
 
+  const handleInputChange = (e) => {
+    const {name, value} = e.target;
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: value 
+    }))
+  }
 
-const handleInputChange = (e) =>{
-  const {name, value} = e.target;
-  setFormData(prev => ({ 
-    ...prev, 
-    [name]: value 
-  }))
-}
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    setFormData(prev => ({
+      ...prev,
+      image: file
+    }))
+  }
 
-const handleImageUpload = (e) => {
-  const file = e.target.files[0];
-  setFormData(prev =>({
-    ...prev,
-    image: file
-  }))
-}
+  // Manejar selección de ubicación en el mapa
+  const handleLocationSelect = (coordinates) => {
+    setFormData(prev => ({
+      ...prev,
+      coordinates: coordinates
+    }));
+    
+    // Opcionalmente, obtener dirección desde coordenadas (geocoding reverso)
+    console.log('Coordinates selected:', coordinates);
+  };
+
+  // Función para toggle del mapa con reset
+  const toggleMap = () => {
+    if (showMap) {
+      // Si estamos ocultando el mapa, resetear coordenadas
+      setFormData(prev => ({
+        ...prev,
+        coordinates: null
+      }));
+    }
+    setShowMap(!showMap);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -51,21 +80,32 @@ const handleImageUpload = (e) => {
       return;
     }
     
+    // Guardar en localStorage (simple)
+    const savedPlaces = JSON.parse(localStorage.getItem('places')) || [];
+    const newPlace = {
+      id: Date.now(),
+      ...formData,
+      createdAt: new Date().toISOString()
+    };
+    
+    savedPlaces.push(newPlace);
+    localStorage.setItem('places', JSON.stringify(savedPlaces));
+    
     console.log('Form data:', formData);
     alert('Place saved successfully!');
     navigate('/localist');
   };
 
   return (
-     <div className="addplace-container">
+    <div className="addplace-container">
       <div className="addplace-header">
         <button className="back-button"
           onClick={() => navigate('/localist')} 
         >←
         </button>
-    <h2>Add Place</h2>
-    </div>
-    
+        <h2>Add Place</h2>
+      </div>
+      
       <form onSubmit={handleSubmit} className="addplace-form">
         <div className="image-upload-section">
           <div className="image-placeholder">
@@ -77,7 +117,7 @@ const handleImageUpload = (e) => {
                 <p>Tap to add photo</p>
               </div>
             )}
-             </div>
+          </div>
           <input
             type="file"
             id="image-upload"
@@ -87,7 +127,9 @@ const handleImageUpload = (e) => {
           />
           <label htmlFor="image-upload" className="upload-label"></label>
         </div>
-            <div className="form-fields">
+        
+        <div className="form-fields">
+          {/* CAMPO NAME */}
           <div className="field-group">
             <label htmlFor="name">Name</label>
             <input
@@ -100,12 +142,14 @@ const handleImageUpload = (e) => {
               className="form-input"
             />
           </div>
- <div className="field-group">
+
+          {/* CAMPO CATEGORY */}
+          <div className="field-group">
             <label htmlFor="category">Category</label>
             <select
               id="category"
               name="category"
-              value={formData.category}// ← Si viene de Hotel, mostrará 'hotel'
+              value={formData.category}
               onChange={handleInputChange}
               className="form-select"
             >
@@ -113,12 +157,44 @@ const handleImageUpload = (e) => {
               <option value="restaurant">Restaurant</option>
               <option value="cafe">Café</option>
               <option value="hotel">Hotel</option>
-                <option value="store">Store</option>   
+              <option value="store">Store</option>   
               <option value="shop">Shop</option>
               <option value="other">Other</option>
             </select>
           </div>
- <div className="field-group">
+
+          {/* CAMPO ADDRESS */}
+          <div className="field-group">
+            <label htmlFor="address">Address</label>
+            <div className="address-input-container">
+              <input
+                type="text"
+                id="address"
+                name="address"
+                value={formData.address}
+                onChange={handleInputChange}
+                placeholder="Enter address"
+                className="form-input"
+              />
+              <button 
+                type="button"
+                className="map-button"
+                onClick={toggleMap}
+              >
+                🗺️ {showMap ? 'Hide Map' : 'Show Map'}
+              </button>
+            </div>
+            
+            {/* MAPA - Renderizado completamente condicional */}
+            <MapSelector 
+              onLocationSelect={handleLocationSelect}
+              coordinates={formData.coordinates}
+              isVisible={showMap}
+            />
+          </div>
+
+          {/* CAMPO NOTES */}
+          <div className="field-group">
             <label htmlFor="notes">Notes</label>
             <textarea
               id="notes"
@@ -137,8 +213,7 @@ const handleImageUpload = (e) => {
         </button>
       </form>
     </div>
-
-
   )
 }
+
 export default AddPlace;

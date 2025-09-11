@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Leaflet from 'leaflet'
 import './Localist.css';
 
 const Localist = () => {
