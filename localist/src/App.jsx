@@ -3,6 +3,7 @@ import  AddPlace  from "./components/AddPlace";
 import Login from "./components/Login";
 import Localist from "./components/Localist";
 import Register from "./components/Register";
+import PlaceDetails from "./components/PlaceDetails";
 
 
 
@@ -15,7 +16,8 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
            <Route path="/localist" element={<Localist />} />
-         <Route path="/add-place" element={<AddPlace />} />
+           <Route path="/add-place" element={<AddPlace />} />
+             <Route path="/place-details" element={<PlaceDetails />} />
       </Routes>
     </Router>
   );
