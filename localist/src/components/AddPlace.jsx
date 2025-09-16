@@ -80,21 +80,12 @@ const AddPlace = () => {
       return;
     }
     
-    // Guardar en localStorage (simple)
-    const savedPlaces = JSON.parse(localStorage.getItem('places')) || [];
-    const newPlace = {
-      id: Date.now(),
-      ...formData,
-      createdAt: new Date().toISOString()
-    };
-    
-    savedPlaces.push(newPlace);
-    localStorage.setItem('places', JSON.stringify(savedPlaces));
-    
-    console.log('Form data:', formData);
-    alert('Place saved successfully!');
-    navigate('/localist');
-  };
+      navigate('/place-preview', { 
+    state: { placeData: formData } 
+  });
+};
+
+
 
   return (
     <div className="addplace-container">

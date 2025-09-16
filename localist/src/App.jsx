@@ -3,7 +3,7 @@ import  AddPlace  from "./components/AddPlace";
 import Login from "./components/Login";
 import Localist from "./components/Localist";
 import Register from "./components/Register";
-import PlaceDetails from "./components/PlaceDetails";
+import PlacePreview from "./components/PlacePreview";
 
 
 
@@ -15,10 +15,13 @@ function App() {
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-           <Route path="/localist" element={<Localist />} />
-           <Route path="/add-place" element={<AddPlace />} />
-             <Route path="/place-details" element={<PlaceDetails />} />
+        <Route path="/localist" element={<Localist />} />
+        <Route path="/add-place" element={<AddPlace />} />
+        <Route path="/place-preview" element={< PlacePreview/>} />
+     
       </Routes>
+
+   
     </Router>
   );
 }
