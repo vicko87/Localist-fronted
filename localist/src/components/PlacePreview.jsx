@@ -84,7 +84,7 @@ import './PlacePreview.css';
           Edit
         </button>
         <button className="confirm-button" onClick={handleSave}>
-          Save Place
+          Delete
         </button>
     </div>
 

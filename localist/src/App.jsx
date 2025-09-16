@@ -7,6 +7,7 @@ import PlacePreview from "./components/PlacePreview";
 
 
 
+
 function App() {
   return (
     <Router>
@@ -18,6 +19,7 @@ function App() {
         <Route path="/localist" element={<Localist />} />
         <Route path="/add-place" element={<AddPlace />} />
         <Route path="/place-preview" element={< PlacePreview/>} />
+     
      
       </Routes>
 
