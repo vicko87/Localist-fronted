@@ -2,25 +2,39 @@ import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 
-// Arreglar iconos de marcador (problema común con Leaflet + React)
-// delete L.Icon.Default.prototype._getIconUrl;
-// L.Icon.Default.mergeOptions({
-//   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-//   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-//   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-// });
+// ✅ Descomenta para arreglar iconos
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+
 
 // Componente para manejar clicks en el mapa
-function LocationMarker({ onLocationSelect }) {
+function LocationMarker({ onLocationSelect,  coordinates }) {
   const [position, setPosition] = useState(null);
   
   useMapEvents({
     click(e) {
       const newPosition = [e.latlng.lat, e.latlng.lng];
       setPosition(newPosition);
-      onLocationSelect(newPosition);
+        onLocationSelect({ lat: e.latlng.lat, lng: e.latlng.lng });
     },
   });
+
+  // ✅ CAMBIO: Mostrar marcador si hay coordenadas pasadas
+  useEffect(() => {
+    if (coordinates) {
+      if (Array.isArray(coordinates)) {
+        setPosition(coordinates);
+      } else if (coordinates.lat && coordinates.lng) {
+        setPosition([coordinates.lat, coordinates.lng]);
+      }
+    }
+  }, [coordinates]);
+
 
   return position === null ? null : (
     <Marker position={position}>
@@ -30,18 +44,31 @@ function LocationMarker({ onLocationSelect }) {
 }
 
 // Componente interno del mapa que se monta/desmonta completamente
-const MapComponent = ({ onLocationSelect }) => {
+const MapComponent = ({ onLocationSelect,  coordinates }) => {
+  const getMapCenter = () => {
+    if (coordinates) {
+      if (Array.isArray(coordinates)) {
+        return coordinates;
+      } else if (coordinates.lat && coordinates.lng) {
+        return [coordinates.lat, coordinates.lng];
+      }
+    }
+ return [40.4168, -3.7038]; // Madrid por defecto
+  };
+
+
   return (
     <MapContainer 
-      center={[40.4168, -3.7038]} // Madrid por defecto
+     center={getMapCenter()}
       zoom={13} 
       style={{ height: '100%', width: '100%' }}
+      key={`${getMapCenter()[0]}-${getMapCenter()[1]}`} 
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
       />
-      <LocationMarker onLocationSelect={onLocationSelect} />
+      <LocationMarker onLocationSelect={onLocationSelect}  coordinates={coordinates} />
     </MapContainer>
   );
 };
@@ -74,18 +101,34 @@ const MapSelector = ({ onLocationSelect, coordinates, isVisible }) => {
 
   if (!isVisible) return null;
 
+  
+  // ✅ CAMBIO: Formatear coordenadas para mostrar
+  const formatCoordinates = () => {
+    if (coordinates) {
+      if (Array.isArray(coordinates)) {
+        return `${coordinates[0].toFixed(4)}, ${coordinates[1].toFixed(4)}`;
+      } else if (coordinates.lat && coordinates.lng) {
+        return `${coordinates.lat.toFixed(4)}, ${coordinates.lng.toFixed(4)}`;
+      }
+    }
+    return null;
+  };
+
   return (
     <div className="map-container">
-      <div style={{ height: '200px', width: '100%' }}>
+       <div className="map-instructions">
+           📍 Click on the map to select location
+      </div>
+ <div style={{ height: '250px', width: '100%' }}>
         {showMapComponent && (
-          <MapComponent onLocationSelect={onLocationSelect} />
+          <MapComponent onLocationSelect={onLocationSelect} coordinates={coordinates} />
         )}
       </div>
-      
+
       {coordinates && (
         <div className="coordinates-info">
           <small>
-            📍 Selected: {coordinates[0].toFixed(4)}, {coordinates[1].toFixed(4)}
+             📍 Selected: {formatCoordinates()}
           </small>
         </div>
       )}

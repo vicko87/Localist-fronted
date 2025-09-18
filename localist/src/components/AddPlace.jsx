@@ -20,6 +20,11 @@ const AddPlace = () => {
     coordinates: null  // ← NUEVO: coordenadas del mapa
   })
   
+  // ✅ NUEVO: Estados para geocodificación
+  const [addressSuggestions, setAddressSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  
   // Estado para mostrar/ocultar mapa
   const [showMap, setShowMap] = useState(false);
 
@@ -33,6 +38,50 @@ const AddPlace = () => {
     }
   }, [selectedCategory]);
 
+  // ✅ NUEVO: Función para buscar direcciones
+  const searchAddress = async (query) => {
+    if (query.length < 3) {
+      setAddressSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+
+    setIsSearching(true);
+    try {
+      // Usando OpenStreetMap Nominatim (gratuito)
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`
+      );
+      const data = await response.json();
+      
+      const suggestions = data.map(item => ({
+        display_name: item.display_name,
+        lat: parseFloat(item.lat),
+        lon: parseFloat(item.lon),
+        address: item.display_name
+      }));
+      
+      setAddressSuggestions(suggestions);
+      setShowSuggestions(true);
+    } catch (error) {
+      console.error('Error searching address:', error);
+      setAddressSuggestions([]);
+    } finally {
+      setIsSearching(false);
+    }
+  };
+
+  // ✅ NUEVO: Debounce para la búsqueda
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (formData.address) {
+        searchAddress(formData.address);
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [formData.address]);
+
   const handleInputChange = (e) => {
     const {name, value} = e.target;
     setFormData(prev => ({ 
@@ -40,6 +89,17 @@ const AddPlace = () => {
       [name]: value 
     }))
   }
+
+  // ✅ NUEVO: Manejar selección de sugerencia
+  const handleSuggestionSelect = (suggestion) => {
+    setFormData(prev => ({
+      ...prev,
+      address: suggestion.address,
+      coordinates: { lat: suggestion.lat, lng: suggestion.lon }
+    }));
+    setShowSuggestions(false);
+    setAddressSuggestions([]);
+  };
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
@@ -50,14 +110,29 @@ const AddPlace = () => {
   }
 
   // Manejar selección de ubicación en el mapa
-  const handleLocationSelect = (coordinates) => {
+  const handleLocationSelect = async (coordinates) => {
     setFormData(prev => ({
       ...prev,
       coordinates: coordinates
     }));
     
-    // Opcionalmente, obtener dirección desde coordenadas (geocoding reverso)
-    console.log('Coordinates selected:', coordinates);
+    // ✅ NUEVO: Geocodificación reversa para obtener dirección
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates.lat}&lon=${coordinates.lng}&addressdetails=1`
+      );
+      const data = await response.json();
+      
+      if (data && data.display_name) {
+        setFormData(prev => ({
+          ...prev,
+          address: data.display_name,
+          coordinates: coordinates
+        }));
+      }
+    } catch (error) {
+      console.error('Error getting address from coordinates:', error);
+    }
   };
 
   // Función para toggle del mapa con reset
@@ -80,12 +155,10 @@ const AddPlace = () => {
       return;
     }
     
-      navigate('/place-preview', { 
-    state: { placeData: formData } 
-  });
-};
-
-
+    navigate('/place-preview', { 
+      state: { placeData: formData } 
+    });
+  };
 
   return (
     <div className="addplace-container">
@@ -158,15 +231,40 @@ const AddPlace = () => {
           <div className="field-group">
             <label htmlFor="address">Address</label>
             <div className="address-input-container">
-              <input
-                type="text"
-                id="address"
-                name="address"
-                value={formData.address}
-                onChange={handleInputChange}
-                placeholder="Enter address"
-                className="form-input"
-              />
+              <div className="address-search-wrapper">
+                <input
+                  type="text"
+                  id="address"
+                  name="address"
+                  value={formData.address}
+                  onChange={handleInputChange}
+                  placeholder="Enter address"
+                  className="form-input"
+                  onFocus={() => formData.address && setShowSuggestions(true)}
+                  onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                />
+                {isSearching && (
+                  <div className="search-indicator">🔍</div>
+                )}
+                
+             
+                {showSuggestions && addressSuggestions.length > 0 && (
+                  <div className="address-suggestions">
+                    {addressSuggestions.map((suggestion, index) => (
+                      <div
+                        key={index}
+                        className="suggestion-item"
+                        onClick={() => handleSuggestionSelect(suggestion)}
+                      >
+                        <div className="suggestion-text">
+                          {suggestion.display_name}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+              
               <button 
                 type="button"
                 className="map-button"
@@ -176,12 +274,21 @@ const AddPlace = () => {
               </button>
             </div>
             
+            {/*  Mostrar coordenadas si están disponibles */}
+            {formData.coordinates && (
+              <div className="coordinates-display">
+                📍 Coordinates: {formData.coordinates.lat.toFixed(4)}, {formData.coordinates.lng.toFixed(4)}
+              </div>
+            )}
+            
             {/* MAPA - Renderizado completamente condicional */}
+              {showMap && (
             <MapSelector 
               onLocationSelect={handleLocationSelect}
               coordinates={formData.coordinates}
               isVisible={showMap}
             />
+              )}
           </div>
 
           {/* CAMPO NOTES */}

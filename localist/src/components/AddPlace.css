@@ -202,3 +202,54 @@
   height: 200px !important;
   width: 100% !important;
 }
+
+
+.address-search-wrapper {
+  position: relative;
+  flex: 1;
+}
+
+
+.address-suggestions {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}
+.suggestion-item {
+  padding: 12px 15px;
+  border-bottom: 1px solid #f0f0f0;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.suggestion-item:hover {
+  background-color: #f8f9fa;
+}
+
+.suggestion-item:last-child {
+  border-bottom: none;
+}
+
+.suggestion-text {
+  font-size: 14px;
+  color: #333;
+  line-height: 1.4;
+}
+
+.coordinates-display {
+  margin-top: 8px;
+  padding: 8px 12px;
+  background: rgba(42, 0, 183, 0.1);
+  border-radius: 6px;
+  font-size: 12px;
+  color: #2A00B7;
+  font-weight: 500;
+}

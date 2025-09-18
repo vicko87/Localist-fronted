@@ -7,10 +7,7 @@ import './PlacePreview.css';
     const location = useLocation();
     const placeData = location.state?.placeData;
 
-        // ✅ DEBUG: Agregar logs
-    console.log('PlacePreview mounted');
-    console.log('location.state:', location.state);
-    console.log('placeData:', placeData);
+   
 
     if(!placeData) {
         navigate('/add-place');
@@ -30,9 +27,17 @@ import './PlacePreview.css';
             localStorage.setItem('places', JSON.stringify(savedPlaces));
 
                // Navegar a detalle final
-               navigate('/place-detail', {
+               navigate('/map-detail', {
                 state: {placeId: newPlace.id}
                });
+    };
+
+    //función para eliminar
+    const handleDelete = () => {
+        if (window.confirm('Are you sure you want to delete this place?')) {
+            // No guardar, solo volver a Localist
+            navigate('/localist');
+        }
     };
     const handleEdit = () => {
         navigate('/add-place', {
@@ -79,13 +84,13 @@ import './PlacePreview.css';
         )}
       </div>
 
-      <div className="preview-buttons">
-        <button className="edit-button" onClick={handleEdit}>
-          Edit
-        </button>
-        <button className="confirm-button" onClick={handleSave}>
-          Delete
-        </button>
+     <div className="preview-buttons">
+                <button className="edit-button" onClick={handleSave}>
+                    Save
+                </button>
+                <button className="confirm-button" onClick={handleDelete}>
+                    Delete
+                </button>
     </div>
 
    </div>
