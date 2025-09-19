@@ -12,6 +12,7 @@ const Localist = () => {
   };
 
   return (
+    
     <div className="localist-container">
       <div className="localist-header">
         <h1>Localist</h1>

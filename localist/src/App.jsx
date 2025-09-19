@@ -5,6 +5,7 @@ import Localist from "./components/Localist";
 import Register from "./components/Register";
 import PlacePreview from "./components/PlacePreview";
 import MapDetail from "./components/MapDetail";
+import Profile from "./components/Profile";
 
 
 
@@ -21,7 +22,7 @@ function App() {
         <Route path="/add-place" element={<AddPlace />} />
         <Route path="/place-preview" element={< PlacePreview/>} />
          <Route path="/map-detail" element={< MapDetail/>} />
-
+          <Route path="/profile" element={< Profile/>} /> 
       </Routes>
 
    

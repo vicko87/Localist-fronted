@@ -17,10 +17,10 @@ const AddPlace = () => {
     address: '',
     notes: '',
     image: null,
-    coordinates: null  // ← NUEVO: coordenadas del mapa
+    coordinates: null  // coordenadas del mapa
   })
   
-  // ✅ NUEVO: Estados para geocodificación
+  // Estados para geocodificación
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
@@ -38,7 +38,7 @@ const AddPlace = () => {
     }
   }, [selectedCategory]);
 
-  // ✅ NUEVO: Función para buscar direcciones
+  //Función para buscar direcciones
   const searchAddress = async (query) => {
     if (query.length < 3) {
       setAddressSuggestions([]);
@@ -71,7 +71,7 @@ const AddPlace = () => {
     }
   };
 
-  // ✅ NUEVO: Debounce para la búsqueda
+  // Debounce para la búsqueda
   useEffect(() => {
     const timer = setTimeout(() => {
       if (formData.address) {
@@ -90,7 +90,7 @@ const AddPlace = () => {
     }))
   }
 
-  // ✅ NUEVO: Manejar selección de sugerencia
+  // Manejar selección de sugerencia
   const handleSuggestionSelect = (suggestion) => {
     setFormData(prev => ({
       ...prev,
@@ -116,7 +116,7 @@ const AddPlace = () => {
       coordinates: coordinates
     }));
     
-    // ✅ NUEVO: Geocodificación reversa para obtener dirección
+    //Geocodificación reversa para obtener dirección
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates.lat}&lon=${coordinates.lng}&addressdetails=1`
