@@ -168,7 +168,6 @@ const MapDetail = () => {
                     <div className="place-card">
                         <h3>{place.name}</h3>
                         <p className="place-category">{place.category}</p>
-                        <p className="place-address">📍 {place.address}</p>
                         {searchAddress !== place.address && (
                             <p className="search-result">
                                 🔍 Searching: {searchAddress}

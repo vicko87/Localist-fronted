@@ -11,16 +11,23 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-  const handleLogin = (e) => {
+const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !pass) {
-      alert("Please fill in all fields");
-      return;
+    
+    // Validación simple
+    if (email && pass) {
+        // Guardar usuario en localStorage
+        localStorage.setItem('currentUser', JSON.stringify({
+            email: email,
+            name: email.split('@')[0] // Usar parte del email como nombre por defecto
+        }));
+        
+        console.log('Login successful');
+        navigate('/map-main'); 
+    } else {
+        alert('Please fill in all fields');
     }
-    console.log("🔐 Logging in:", { email, pass });
-    alert("Login successful (demo)");
-  navigate('/localist');
-  };
+};
 
   return (
     <div className="container">
@@ -29,7 +36,7 @@ const Login = () => {
         <div className="underline"></div>
       </div>
 
-      <form className="inputs" onSubmit={handleLogin}>
+      <form className="inputs" onSubmit={handleSubmit}>
         <div className="input">
           <img src={mail} alt="mail" />
           <input

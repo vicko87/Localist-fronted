@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom"
 import './Profile.css';
 
 export const Profile = () => {
-  const navigate = useNavigate
+  const navigate = useNavigate()
   const [user, setUser] = useState({
     name:'',
     email:''
@@ -35,7 +35,7 @@ export const Profile = () => {
     <div className="profile-container">
            {/* Header */}
            <div className="profile-header">
-            <button className="back-buttom" onClick={() => navigate('/localist')}>
+            <button className="back-button" onClick={() => navigate('/localist')}>
                  ←
             </button>
      <h2>Profile</h2>

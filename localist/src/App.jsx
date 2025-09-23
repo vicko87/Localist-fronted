@@ -6,6 +6,7 @@ import Register from "./components/Register";
 import PlacePreview from "./components/PlacePreview";
 import MapDetail from "./components/MapDetail";
 import Profile from "./components/Profile";
+import MapMain from "./components/MapMain";
 
 
 
@@ -14,11 +15,13 @@ function App() {
   return (
     <Router>
       <Routes>
-        
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+         <Route path="/map-main" element={<MapMain />} />
         <Route path="/localist" element={<Localist />} />
+
         <Route path="/add-place" element={<AddPlace />} />
         <Route path="/place-preview" element={< PlacePreview/>} />
          <Route path="/map-detail" element={< MapDetail/>} />
