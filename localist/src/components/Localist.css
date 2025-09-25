@@ -1,17 +1,21 @@
 .localist-container {
   max-width: 400px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 0; /*  CAMBIAR A 0 PARA QUE EL HEADER OCUPE TODO */
   background: linear-gradient(#2A00B7, #42006C);
   min-height: 100vh;
   color: white;
   font-family: Arial, sans-serif;
+  padding-bottom: 100px; /* AÑADIR ESPACIO PARA BOTTOM NAV */
 }
 
+/*HEADER CON GRADIENTE BONITO COMO TU IMAGEN */
 .localist-header {
-  text-align: center;
-  margin-bottom: 40px;
-  padding-top: 20px;
+  background: linear-gradient(135deg, #6A0DAD, #8A2BE2, #9370DB);
+  padding: 15px 20px; /* MENOS PADDING VERTICAL */
+  box-shadow: 0 4px 15px rgba(106, 13, 173, 0.3);
+  margin: 20px 15px 40px 15px; /* ESPACIO ARRIBA Y MÁS ESTRECHO */
+ 
 }
 
 .localist-header h1 {
@@ -19,12 +23,15 @@
   font-weight: 500;
   margin: 0;
   color: white;
+  text-align: center;
 }
 
+/* AÑADIR PADDING AL CONTENIDO */
 .add-button-section {
   display: flex;
   justify-content: center;
   margin-bottom: 40px;
+  padding: 0 20px; /* PADDING LATERAL */
 }
 
 .add-button {
@@ -53,6 +60,7 @@
   display: flex;
   flex-direction: column;
   gap: 0;
+  padding: 0 20px; /* PADDING LATERAL */
 }
 
 .category-item {
@@ -94,8 +102,9 @@
 
 /* Responsive */
 @media (max-width: 480px) {
-  .localist-container {
-    padding: 15px;
+  .add-button-section,
+  .categories-list {
+    padding: 0 15px; /* PADDING LATERAL EN MÓVIL */
   }
   
   .category-item {

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
+import BottomNav from './BottomNav';
 import 'leaflet/dist/leaflet.css';
 import './MapDetail.css';
 
@@ -100,7 +101,7 @@ const MapDetail = () => {
                 geocodeAddress(foundPlace.address);
             }
         } else {
-            navigate('/localist');
+            navigate('/map-main');
         }
     }, [placeId, navigate]);
 
@@ -113,13 +114,10 @@ const MapDetail = () => {
     }
 
     return (
-        <div className="map-detail-container">
-            {/* Header */}
+         <div className="map-detail-container">
             <div className="map-header">
-                <button className="back-button" onClick={() => navigate('/localist')}>
-                    ←
-                </button>
                 <h2>Map</h2>
+                <p className="place-title">{place.name}</p>
             </div>
 
             {/* Search bar */}
@@ -139,10 +137,10 @@ const MapDetail = () => {
           {/*MAPA MÁS GRANDE */}
             <div className="map-area">
                <MapContainer 
-    center={mapCenter} 
-    zoom={15} //Zoom más cercano para ver detalles
-    className="leaflet-map"
-    key={`${mapCenter[0]}-${mapCenter[1]}`}
+               center={mapCenter} 
+               zoom={15} //Zoom más cercano para ver detalles
+               className="leaflet-map"
+               key={`${mapCenter[0]}-${mapCenter[1]}`}
 >
     <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -186,7 +184,10 @@ const MapDetail = () => {
                     </span>
                 </div>
             </div>
-        </div>
+        <BottomNav />
+   
+</div>
+
     );
 };
 

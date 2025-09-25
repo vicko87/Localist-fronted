@@ -4,8 +4,9 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapMain.css';
+import BottomNav from './BottomNav';
 
-// ✅ CONFIGURACIÓN SIMPLE DE ICONOS (SIN IMPORTS)
+// CONFIGURACIÓN SIMPLE DE ICONOS (SIN IMPORTS)
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
@@ -13,7 +14,7 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-// ✅ Iconos por categoría con URLs directas
+// Iconos por categoría con URLs directas
 const categoryIcons = {
   restaurant: new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -65,7 +66,7 @@ const MapMain = () => {
             setIsLoading(true);
             
             let savedPlaces = JSON.parse(localStorage.getItem('places')) || [];
-            
+                // 2. Si no hay datos, crear ejemplos
             if (savedPlaces.length === 0) {
                 console.log('✨ Creating sample data...');
 
@@ -79,7 +80,7 @@ const MapMain = () => {
     },
     {
         id: 2,
-        name: "Park Güell", // ✅ CAMBIAR nombre, no duplicar
+        name: "Park Güell", 
         address: "Carrer d'Olot, Barcelona",
         category: "other",
         coordinates: { lat: 41.4145, lng: 2.1527 }
@@ -110,10 +111,11 @@ const MapMain = () => {
             }
             
             console.log('📍 Places loaded:', savedPlaces);
+                    // 3. Actualizar estados
             setPlaces(savedPlaces);
             setFilteredPlaces(savedPlaces);
             
-            // ✅ Validar coordenadas antes de usar
+            // Validar coordenadas antes de usar
           if (savedPlaces.length > 0 && savedPlaces[0].coordinates && 
                 typeof savedPlaces[0].coordinates.lat === 'number' && 
                 typeof savedPlaces[0].coordinates.lng === 'number') {
@@ -175,7 +177,7 @@ const MapMain = () => {
     
     const stats = getCategoryStats();
 
-    // ✅ MOSTRAR PANTALLA DE CARGA
+    // MOSTRAR PANTALLA DE CARGA
     if (isLoading) {
         return (
             <div className='map-main-container'>
@@ -193,7 +195,7 @@ const MapMain = () => {
         );
     }
 
-    // ✅ MOSTRAR PANTALLA DE ERROR
+    // MOSTRAR PANTALLA DE ERROR
     if (error) {
         return (
             <div className='map-main-container'>
@@ -232,24 +234,12 @@ const MapMain = () => {
         <div className='map-main-container'>
             <div className='map-main-header'>
                 <div className='header-top'>
-                    <button className='back-button' onClick={() => navigate('/localist')}>
-                        📋 
-                    </button>
-                    <h2>My Places Map</h2>
-                    <button className='profile-button' onClick={() => navigate('/profile')}>
-                       👤
-                    </button>
+                    <div className='app-logo'>
+                       <h2 className='app-title'>Localist</h2>
+                </div>
                 </div>
                 
-                <div className="quick-add-section">
-                    <button 
-                        className="quick-add-button"
-                        onClick={() => navigate('/add-place')}
-                    >
-                        ➕ Add Place
-                    </button>
-                </div>
-
+             
                 <div className='search-section'>
                     <div className='search-bar'>
                         <span className='search-icon'>🔍</span>
@@ -307,7 +297,7 @@ const MapMain = () => {
             </div>
 
             <div className="map-main-area">
-                {/* ✅ VALIDAR que tenemos coordenadas válidas */}
+                {/* VALIDAR que tenemos coordenadas válidas */}
                 {mapCenter && mapCenter.length === 2 && (
                     <MapContainer
                         center={mapCenter}
@@ -321,7 +311,7 @@ const MapMain = () => {
                         />
 
                         {filteredPlaces.map((place) => {
-                            // ✅ Validar cada lugar antes de renderizar
+                            //Validar cada lugar antes de renderizar
                             if (!place || !place.coordinates || 
                                 typeof place.coordinates.lat !== 'number' || 
                                 typeof place.coordinates.lng !== 'number') {
@@ -364,6 +354,7 @@ const MapMain = () => {
                     <span>Showing {filteredPlaces.length} of {places.length} places</span>
                 </div>
             </div>
+             <BottomNav />
         </div>
     );
 };

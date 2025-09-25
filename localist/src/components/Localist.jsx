@@ -1,6 +1,6 @@
-import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
-import Leaflet from 'leaflet'
+import BottomNav from './BottomNav';
 import './Localist.css';
 
 const Localist = () => {
@@ -59,6 +59,9 @@ const Localist = () => {
           <span className="arrow">📍</span>
         </div>
       </div>
+
+      
+      <BottomNav />
     </div>
   );
 };

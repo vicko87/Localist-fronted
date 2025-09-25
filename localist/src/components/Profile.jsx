@@ -35,7 +35,7 @@ export const Profile = () => {
     <div className="profile-container">
            {/* Header */}
            <div className="profile-header">
-            <button className="back-button" onClick={() => navigate('/localist')}>
+            <button className="back-button" onClick={() => navigate('/map-main')}>
                  ←
             </button>
      <h2>Profile</h2>

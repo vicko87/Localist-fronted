@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import MapSelector from './MapSelector';
 import './AddPlace.css';
 
+
 const AddPlace = () => {
   const navigate = useNavigate(); 
   const location = useLocation()
