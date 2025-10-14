@@ -8,7 +8,7 @@ import MapDetail from "./components/map/MapDetail";
 import Profile from "./components/auth/Profile";
 import MapMain from "./components/map/MapMain";
 import PlacesList from "./components/places/PlacesList"; 
-
+import PlacesPage from "./components/places/PlacesPage";
 
 
 
@@ -28,6 +28,7 @@ function App() {
          <Route path="/map-detail" element={< MapDetail/>} />
           <Route path="/profile" element={< Profile/>} /> 
            <Route path="/places-list" element={<PlacesList />} /> 
+           <Route path="/places" element={<PlacesPage />} />
       </Routes>
 
    

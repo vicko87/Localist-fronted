@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
 import MapSelector from '../map/MapSelector';
+import { createPlace } from "../../api/places";
 import './AddPlace.css';
 
 
@@ -148,18 +149,37 @@ const AddPlace = () => {
     setShowMap(!showMap);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!formData.name) {
       alert('Please enter a name for the place');
       return;
     }
-    
-    navigate('/place-preview', { 
-      state: { placeData: formData } 
-    });
-  };
+     // Si usas autenticación, obtén el token del localStorage
+    try {
+      const token = localStorage.getItem('token');
+// paraq imagen, FormData para enviar archivos
+      const dataToSend = new FormData();
+      dataToSend.append('name', formData.name);
+      dataToSend.append('category', formData.category);
+      dataToSend.append("address", formData.address);
+      dataToSend.append("notes", formData.notes);
+      if(formData.image) dataToSend.append('image', formData.image);
+      if(formData.coordinates) {
+        dataToSend.append('lat', formData.coordinates.lat);
+        dataToSend.append('lng', formData.coordinates.lhg);
+      }
+
+      await createPlace(dataToSend, token);
+
+      alert('Place added successfully');
+      navigate('/localist');
+    } catch (err) {
+       alert(err.response?.data?.message || 'Error adding place');
+
+    }
+    }
 
   return (
     <div className="addplace-container">
