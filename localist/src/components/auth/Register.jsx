@@ -1,27 +1,38 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { register } from "../../api/auth";
 import "./LoginSignup.css";
 
-import user from "../Assets/user.png";
-import mail from "../Assets/mail.png";
-import password from "../Assets/password.png";
+import user from "../../Assets/user.png";
+import mail from "../../Assets/mail.png";
+import password from "../../Assets/password.png";
 
 const Register = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-  const handleRegister = (e) => {
+  
+  const handleRegister = async(e) => {
     e.preventDefault();
     if (!name || !email || !pass) {
       alert("Please fill in all fields");
       return;
     }
-    console.log("📝 Registering:", { name, email, pass });
-    alert("Registered successfully (demo)");
+    try {
+   await register({
+      username: name,
+      email: email,
+      password: pass,
+    });
+    
+    alert("Registered successfully");
       navigate('/localist'); 
-  };
+  }catch (err) {
+    alert(err.response?.data?.message || "Error registering");
+  }
+};
 
   return (
     <div className="container">

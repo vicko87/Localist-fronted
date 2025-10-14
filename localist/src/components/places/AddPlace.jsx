@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom';
-import MapSelector from './MapSelector';
+import MapSelector from '../map/MapSelector';
 import './AddPlace.css';
 
 

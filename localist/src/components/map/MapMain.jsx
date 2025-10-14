@@ -4,7 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './MapMain.css';
-import BottomNav from './BottomNav';
+import BottomNav from '../common/BottomNav';
 
 // CONFIGURACIÓN SIMPLE DE ICONOS (SIN IMPORTS)
 delete L.Icon.Default.prototype._getIconUrl;

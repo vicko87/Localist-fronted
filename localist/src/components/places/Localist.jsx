@@ -1,6 +1,6 @@
 
 import { useNavigate } from 'react-router-dom';
-import BottomNav from './BottomNav';
+import BottomNav from '../common/BottomNav';
 import './Localist.css';
 
 const Localist = () => {

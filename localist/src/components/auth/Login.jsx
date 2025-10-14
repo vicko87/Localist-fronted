@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { Link,  useNavigate  } from "react-router-dom";
+import { login } from "../../api/auth";
+
 import "./LoginSignup.css";
 
-import mail from "../Assets/mail.png";
-import password from "../Assets/password.png";
+import mail from "../../Assets/mail.png";
+import password from "../../Assets/password.png";
 
 
 const Login = () => {
@@ -11,23 +13,18 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
     
-    // Validación simple
-    if (email && pass) {
-        // Guardar usuario en localStorage
-        localStorage.setItem('currentUser', JSON.stringify({
-            email: email,
-            name: email.split('@')[0] // Usar parte del email como nombre por defecto
-        }));
-        
-        console.log('Login successful');
-        navigate('/map-main'); 
-    } else {
-        alert('Please fill in all fields');
+    try {
+   await login({ email, password: pass });
+      // Guarda el token si lo necesitas: localStorage.setItem('token', res.data.token);
+      alert("Login exitoso");
+      navigate('/localist');
+    } catch (err) {
+      alert(err.response?.data?.message || "Error al iniciar sesión");
     }
-};
+  };
 
   return (
     <div className="container">

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
-import BottomNav from './BottomNav';
+import BottomNav from '../common/BottomNav';
 import 'leaflet/dist/leaflet.css';
 import './MapDetail.css';
 
