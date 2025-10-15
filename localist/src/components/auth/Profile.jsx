@@ -99,7 +99,7 @@ export const Profile = () => {
 
  {/* Quick Actions */}
       <div className="quick-actions">
-        <button className="action-button" onClick={() => navigate('/localist')}>
+        <button className="action-button" onClick={() => navigate('/map-main')}>
           🗺️ My Places
         </button>
         <button className="action-button" onClick={() => navigate('/add-place')}>

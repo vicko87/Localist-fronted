@@ -10,3 +10,18 @@ export const createPlace = (data, token) =>
        Authorization: `Bearer ${token}`
      //  'Content-Type': 'multipart/form-data'
      } });
+
+     export const updatePlace = (id, data, token) =>
+      axios.put(`${API_URL}/${id}`, data, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+     // "Content-Type": "multipart/form-data"
+        }
+      })
+
+      export const deletePlace = (id, token) =>
+  axios.delete(`${API_URL}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`
+    }
+  });
