@@ -59,7 +59,7 @@ const MapMain = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [mapCenter, setMapCenter] = useState([41.3851, 2.1734]);
     const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState(null);
+    const [error] = useState(null);
 
     // useEffect(() => {
     //     try {
@@ -349,9 +349,6 @@ const MapMain = () => {
                                     key={place.id}
                                     position={position}
                                     icon={icon}
-                                    eventHandlers={{
-                                        click: () => handleMarkerClick(place)
-                                    }}
                                 >
                                     <Popup>
                                         <div className="popup-content">
