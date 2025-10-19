@@ -5,7 +5,7 @@ import './Profile.css';
 export const Profile = () => {
   const navigate = useNavigate()
   const [user, setUser] = useState({
-    name:'',
+    username:'',
     email:''
   })
 
@@ -65,7 +65,7 @@ export const Profile = () => {
                 className="edit-input"
             />
         ) : (
-            <p>{user.name || 'Not set'}</p>
+            <p>{user.username || 'Not set'}</p>
         )}
     </div>
 

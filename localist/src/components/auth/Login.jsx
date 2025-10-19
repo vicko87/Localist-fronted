@@ -17,8 +17,10 @@ const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
-   await login({ email, password: pass });
+   const res = await login({ email, password: pass });
       // Guarda el token si lo necesitas: localStorage.setItem('token', res.data.token);
+    localStorage.setItem('token', res.data.token);
+    localStorage.setItem('currentUser', JSON.stringify(res.data.user));
       alert("Login exitoso");
       navigate('/localist');
     } catch (err) {

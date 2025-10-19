@@ -6,12 +6,12 @@ import './AddPlace.css';
 
 
 const AddPlace = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const location = useLocation()
-  
+
   // Obtener la categoría pre-seleccionada (si viene de Localist)
   const selectedCategory = location.state?.selectedCategory || '';
-  
+
   // estado inicial del formulario usa la categoría recibida:
   const [formData, setFormData] = useState({
     name: '',
@@ -21,12 +21,12 @@ const AddPlace = () => {
     image: null,
     coordinates: null  // coordenadas del mapa
   })
-  
+
   // Estados para geocodificación
   const [addressSuggestions, setAddressSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
   const [isSearching, setIsSearching] = useState(false);
-  
+
   // Estado para mostrar/ocultar mapa
   const [showMap, setShowMap] = useState(false);
 
@@ -55,14 +55,14 @@ const AddPlace = () => {
         `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`
       );
       const data = await response.json();
-      
+
       const suggestions = data.map(item => ({
         display_name: item.display_name,
         lat: parseFloat(item.lat),
         lon: parseFloat(item.lon),
         address: item.display_name
       }));
-      
+
       setAddressSuggestions(suggestions);
       setShowSuggestions(true);
     } catch (error) {
@@ -85,15 +85,16 @@ const AddPlace = () => {
   }, [formData.address]);
 
   const handleInputChange = (e) => {
-    const {name, value} = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: value 
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
     }))
   }
 
   // Manejar selección de sugerencia
   const handleSuggestionSelect = (suggestion) => {
+    console.log('Selected suggestion:', suggestion);
     setFormData(prev => ({
       ...prev,
       address: suggestion.address,
@@ -117,14 +118,14 @@ const AddPlace = () => {
       ...prev,
       coordinates: coordinates
     }));
-    
+
     //Geocodificación reversa para obtener dirección
     try {
       const response = await fetch(
         `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coordinates.lat}&lon=${coordinates.lng}&addressdetails=1`
       );
       const data = await response.json();
-      
+
       if (data && data.display_name) {
         setFormData(prev => ({
           ...prev,
@@ -151,24 +152,24 @@ const AddPlace = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     if (!formData.name) {
       alert('Please enter a name for the place');
       return;
     }
-     // Si usas autenticación, obtén el token del localStorage
+    // Si usas autenticación, obtén el token del localStorage
     try {
       const token = localStorage.getItem('token');
-// paraq imagen, FormData para enviar archivos
+      // paraq imagen, FormData para enviar archivos
       const dataToSend = new FormData();
       dataToSend.append('name', formData.name);
       dataToSend.append('category', formData.category);
       dataToSend.append("address", formData.address);
       dataToSend.append("notes", formData.notes);
-      if(formData.image) dataToSend.append('image', formData.image);
-      if(formData.coordinates) {
+      if (formData.image) dataToSend.append('image', formData.image);
+      if (formData.coordinates) {
         dataToSend.append('lat', formData.coordinates.lat);
-        dataToSend.append('lng', formData.coordinates.lhg);
+        dataToSend.append('lng', formData.coordinates.lng);
       }
 
       await createPlace(dataToSend, token);
@@ -176,21 +177,21 @@ const AddPlace = () => {
       alert('Place added successfully');
       navigate('/localist');
     } catch (err) {
-       alert(err.response?.data?.message || 'Error adding place');
+      alert(err.response?.data?.message || 'Error adding place');
 
     }
-    }
+  }
 
   return (
     <div className="addplace-container">
       <div className="addplace-header">
         <button className="back-button"
-          onClick={() => navigate('/localist')} 
+          onClick={() => navigate('/localist')}
         >←
         </button>
         <h2>Add Place</h2>
       </div>
-      
+
       <form onSubmit={handleSubmit} className="addplace-form">
         <div className="image-upload-section">
           <div className="image-placeholder">
@@ -212,7 +213,7 @@ const AddPlace = () => {
           />
           <label htmlFor="image-upload" className="upload-label"></label>
         </div>
-        
+
         <div className="form-fields">
           {/* CAMPO NAME */}
           <div className="field-group">
@@ -242,7 +243,7 @@ const AddPlace = () => {
               <option value="restaurant">Restaurant</option>
               <option value="cafe">Café</option>
               <option value="hotel">Hotel</option>
-              <option value="store">Store</option>   
+              <option value="store">Store</option>
               <option value="shop">Shop</option>
               <option value="other">Other</option>
             </select>
@@ -267,8 +268,8 @@ const AddPlace = () => {
                 {isSearching && (
                   <div className="search-indicator">🔍</div>
                 )}
-                
-             
+
+
                 {showSuggestions && addressSuggestions.length > 0 && (
                   <div className="address-suggestions">
                     {addressSuggestions.map((suggestion, index) => (
@@ -285,8 +286,8 @@ const AddPlace = () => {
                   </div>
                 )}
               </div>
-              
-              <button 
+
+              <button
                 type="button"
                 className="map-button"
                 onClick={toggleMap}
@@ -294,22 +295,22 @@ const AddPlace = () => {
                 🗺️ {showMap ? 'Hide Map' : 'Show Map'}
               </button>
             </div>
-            
+
             {/*  Mostrar coordenadas si están disponibles */}
             {formData.coordinates && (
               <div className="coordinates-display">
                 📍 Coordinates: {formData.coordinates.lat.toFixed(4)}, {formData.coordinates.lng.toFixed(4)}
               </div>
             )}
-            
+
             {/* MAPA - Renderizado completamente condicional */}
-              {showMap && (
-            <MapSelector 
-              onLocationSelect={handleLocationSelect}
-              coordinates={formData.coordinates}
-              isVisible={showMap}
-            />
-              )}
+            {showMap && (
+              <MapSelector
+                onLocationSelect={handleLocationSelect}
+                coordinates={formData.coordinates}
+                isVisible={showMap}
+              />
+            )}
           </div>
 
           {/* CAMPO NOTES */}

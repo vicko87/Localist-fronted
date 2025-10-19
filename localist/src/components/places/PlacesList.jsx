@@ -10,7 +10,7 @@ const PlacesList = () => {
     getPlaces().then(res => setPlaces(res.data));
   }, []);
 
-    const handlePlaceEdited = () => {
+  const handlePlaceEdited = () => {
     setEditingPlace(null);
     getPlaces().then(res => setPlaces(res.data)); // Actualizar la lista
   };
@@ -25,17 +25,17 @@ const PlacesList = () => {
 
   return (
     <div>
-         {editingPlace ? (
+      {editingPlace ? (
         <EditPlace place={editingPlace} onPlaceEdited={handlePlaceEdited} />
       ) : (
-      places.map(place => (
-        <div key={place._id}>
-          <h3>{place.name}</h3>
-          <p>{place.description}</p>
+        places.map(place => (
+          <div key={place._id}>
+            <h3>{place.name}</h3>
+            <p>{place.description}</p>
             <button onClick={() => setEditingPlace(place)}>Edit</button>
-             <button onClick={() => handleDelete(place._id)}>Delete</button>
-        </div>
-      ))
+            <button onClick={() => handleDelete(place._id)}>Delete</button>
+          </div>
+        ))
       )}
     </div>
   );

@@ -7,15 +7,13 @@ export const getPlaces = () => axios.get(API_URL);
 export const createPlace = (data, token) =>
   axios.post(API_URL, data, 
     { headers: {
-       Authorization: `Bearer ${token}`
-     //  'Content-Type': 'multipart/form-data'
+       Authorization: `Bearer ${token}`,
      } });
 
      export const updatePlace = (id, data, token) =>
       axios.put(`${API_URL}/${id}`, data, {
         headers: {
           Authorization: `Bearer ${token}`,
-     // "Content-Type": "multipart/form-data"
         }
       })
 
