@@ -133,7 +133,8 @@ const MapMain = () => {
     // }, []);
 
     useEffect(() => {
-        getPlaces().then(res => {
+        const token = localStorage.getItem('token');
+        getPlaces(token).then(res => {
             const apiPlaces = res.data;
             const places = apiPlaces.map(place => ({
                 id: place._id,
@@ -145,9 +146,11 @@ const MapMain = () => {
                 createdBy: place.createdBy
             }));
 
-            setMapCenter([places[0].coordinates.lat, places[0].coordinates.lng]);
-            setPlaces(places);
-            setFilteredPlaces(places);
+            if (places.length > 0) {
+                setMapCenter([places[0].coordinates.lat, places[0].coordinates.lng]);
+                setPlaces(places);
+                setFilteredPlaces(places);
+            }
             setIsLoading(false);
         });
     }, []);

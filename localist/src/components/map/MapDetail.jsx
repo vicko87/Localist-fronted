@@ -13,7 +13,8 @@ const MapDetail = () => {
 
     useEffect(() => {
         if (placeId) {
-            getPlaces().then(res => {
+            const token = localStorage.getItem('token');
+            getPlaces(token).then(res => {
                 console.log(placeId)
                 const foundPlace = res.data.find(p => p._id === placeId);
                 setPlace(foundPlace);

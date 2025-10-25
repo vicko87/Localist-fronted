@@ -7,12 +7,14 @@ const PlacesList = () => {
   const [editingPlace, setEditingPlace] = useState(null);
 
   useEffect(() => {
-    getPlaces().then(res => setPlaces(res.data));
+    const token = localStorage.getItem('token');
+    getPlaces(token).then(res => setPlaces(res.data));
   }, []);
 
   const handlePlaceEdited = () => {
     setEditingPlace(null);
-    getPlaces().then(res => setPlaces(res.data)); // Actualizar la lista
+    const token = localStorage.getItem('token');
+    getPlaces(token).then(res => setPlaces(res.data)); // Actualizar la lista
   };
 
   const handleDelete = async (id) => {
