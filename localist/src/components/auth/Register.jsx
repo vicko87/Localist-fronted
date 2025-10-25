@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { register } from "../../api/auth";
+import { register, login } from "../../api/auth";
 import "./LoginSignup.css";
 
 import user from "../../Assets/user.png";
@@ -13,26 +13,30 @@ const Register = () => {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-  
-  const handleRegister = async(e) => {
+
+  const handleRegister = async (e) => {
     e.preventDefault();
     if (!name || !email || !pass) {
       alert("Please fill in all fields");
       return;
     }
     try {
-   await register({
-      username: name,
-      email: email,
-      password: pass,
-    });
-    
-    alert("Registered successfully");
-      navigate('/localist'); 
-  }catch (err) {
-    alert(err.response?.data?.message || "Error registering");
-  }
-};
+      await register({
+        username: name,
+        email: email,
+        password: pass,
+      });
+
+      const res = await login({ email, password: pass });
+
+      localStorage.setItem('token', res.data.token);
+
+      alert("Registered successfully");
+      navigate('/localist');
+    } catch (err) {
+      alert(err.response?.data?.message || "Error registering");
+    }
+  };
 
   return (
     <div className="container">
@@ -71,11 +75,11 @@ const Register = () => {
             onChange={(e) => setPass(e.target.value)}
           />
         </div>
-       <div  className="submit-container">
-        <button type="submit" className="submit">
-          Sign Up
-        </button>
-               </div>
+        <div className="submit-container">
+          <button type="submit" className="submit">
+            Sign Up
+          </button>
+        </div>
 
       </form>
 

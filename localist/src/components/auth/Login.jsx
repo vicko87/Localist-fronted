@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link,  useNavigate  } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { login } from "../../api/auth";
 
 import "./LoginSignup.css";
@@ -9,18 +9,18 @@ import password from "../../Assets/password.png";
 
 
 const Login = () => {
-   const navigate = useNavigate();
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    
+
     try {
-   const res = await login({ email, password: pass });
+      const res = await login({ email, password: pass });
       // Guarda el token si lo necesitas: localStorage.setItem('token', res.data.token);
-    localStorage.setItem('token', res.data.token);
-    localStorage.setItem('currentUser', JSON.stringify(res.data.user));
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('currentUser', JSON.stringify(res.data.user));
       alert("Login exitoso");
       navigate('/localist');
     } catch (err) {
@@ -55,11 +55,11 @@ const handleSubmit = async (e) => {
             onChange={(e) => setPass(e.target.value)}
           />
         </div>
-          <div className="submit-container">
+        <div className="submit-container">
           <button type="submit" className="submit">
-      Login
-    </button>
-  </div>
+            Login
+          </button>
+        </div>
         <div className="forgot-password">
           Lost Password? <span>Click Here!</span>
         </div>
@@ -68,7 +68,7 @@ const handleSubmit = async (e) => {
       <p style={{ textAlign: "center" }}>
         Don’t have an account? <Link to="/register">Sign Up</Link>
       </p>
-      
+
     </div>
   );
 };
