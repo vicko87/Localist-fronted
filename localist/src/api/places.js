@@ -1,7 +1,7 @@
 
 import axios from 'axios';
 
-const API_URL = 'http://localhost:5000/api/places';
+const API_URL = `${import.meta.env.VITE_API_URL}/api/places`;
 
 export const getPlaces = () => axios.get(API_URL);
 export const createPlace = (data, token) =>
