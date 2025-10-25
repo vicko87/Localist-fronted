@@ -30,6 +30,7 @@ const Register = () => {
       const res = await login({ email, password: pass });
 
       localStorage.setItem('token', res.data.token);
+      localStorage.setItem('currentUser', JSON.stringify(res.data.user));
 
       alert("Registered successfully");
       navigate('/localist');
